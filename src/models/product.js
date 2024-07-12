@@ -5,6 +5,7 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  // todo change img to file, not string
   img: {
     type: String,
     required: true

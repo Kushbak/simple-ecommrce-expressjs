@@ -5,11 +5,9 @@ const bodyParser = require('body-parser');
 const cartRouter = require('./routes/cart')
 const productRouter = require('./routes/product')
 
-
-const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.vy6mgfl.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_CLUSTERNAME}`;
+const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.zo8jykc.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_CLUSTERNAME}`;
 
 const app = express()
-
 
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
