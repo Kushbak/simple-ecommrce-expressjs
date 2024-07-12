@@ -1,18 +1,18 @@
 const { Schema, model } = require('mongoose')
 
-const CartSchema = new Schema({
+const FavoriteSchema = new Schema({
   count: {
     type: Number,
     default: 1,
   },
-  order: {
+  car: {
     type: Schema.Types.ObjectId,
-    ref: 'Order',   
+    ref: 'Car',   
     required: true
   },
 })
 
-CartSchema.set('toJSON', {
+FavoriteSchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
   transform: (doc, ret) => {
@@ -22,4 +22,4 @@ CartSchema.set('toJSON', {
   }
 })
 
-module.exports = model('Cart', CartSchema)
+module.exports = model('Favorite', FavoriteSchema)

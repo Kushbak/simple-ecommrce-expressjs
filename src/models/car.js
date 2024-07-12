@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const ProductSchema = new Schema({
+const CarSchema = new Schema({
   name: {
     type: String,
     required: true,
@@ -8,7 +8,7 @@ const ProductSchema = new Schema({
   // todo change img to file, not string
   img: {
     type: String,
-    required: true
+    required: false
   },
   price: {
     type: Number,
@@ -16,7 +16,7 @@ const ProductSchema = new Schema({
   }
 })
 
-ProductSchema.set('toJSON', {
+CarSchema.set('toJSON', {
   virtuals: true,
   versionKey: false,
   transform: (doc, ret) => {
@@ -26,4 +26,4 @@ ProductSchema.set('toJSON', {
   }
 })
 
-module.exports = model('Product', ProductSchema)
+module.exports = model('Car', CarSchema)

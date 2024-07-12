@@ -1,60 +1,60 @@
 const { Router } = require('express')
 const router = Router()
-const Cart = require('../models/cart')
+const Favorite = require('../models/favorite')
 
 router.get('/', async (req, res) => {
-  const cart = await Cart
+  const favorite = await Favorite
   .find()
   .populate('order')
   
-  res.json(cart)
+  res.json(favorite)
 })
 
-router.get('/:cartId', async (req, res) => {
+router.get('/:favoriteId', async (req, res) => {
   console.log(req.query)
-  const cart = await Cart.find({
-    _id: req.params.cartId
+  const favorite = await Favorite.find({
+    _id: req.params.favoriteId
   })
   .populate('order')
-  res.json(cart)
+  res.json(favorite)
 })
 
 router.post('/', async (req, res) => {
-  const cart = new Cart({
+  const favorite = new Favorite({
     count: 1,
     order: req.body.orderId
   })
 
-  await cart.save()
+  await favorite.save()
 
   res.json({ message: 'Товар успешно добавлен в корзину' })
 })
 
-router.put('/:cartId', async (req, res) => {
-  const cartItem = await Cart.findById(req.params.cartId)
+router.put('/:favoriteId', async (req, res) => {
+  const favoriteItem = await Favorite.findById(req.params.favoriteId)
 
   const toChange = {
     count: req.body.count
   }
-  Object.assign(cartItem, toChange)
-  await cartItem.save()
+  Object.assign(favoriteItem, toChange)
+  await favoriteItem.save()
 
-  res.json(cartItem)
+  res.json(favoriteItem)
 })
 
-router.delete('/:cartId', async (req, res) => {
-  await Cart.deleteOne({ _id: req.params.cartId })
+router.delete('/:favoriteId', async (req, res) => {
+  await Favorite.deleteOne({ _id: req.params.favoriteId })
   res.json({ message: 'Товар успешно удален' })
 })
 
 router.delete('/', async (req, res) => {
-  await Cart.deleteMany()
+  await Favorite.deleteMany()
   res.json({ message: 'Корзина очищена' })
 })
 
 
 // Написать роут для удаления
-// в парамс принимает айди cart элемента
+// в парамс принимает айди favorite элемента
 // сделать удаление с базы данных смотря на документацию
 // возвратить сообщение об успешном выполнении
 

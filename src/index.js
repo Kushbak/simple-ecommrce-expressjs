@@ -2,8 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
-const cartRouter = require('./routes/cart')
-const productRouter = require('./routes/product')
+const favoriteRouter = require('./routes/favorite')
+const carRouter = require('./routes/car')
 
 const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.zo8jykc.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_CLUSTERNAME}`;
 
@@ -18,8 +18,8 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.json());
 
-app.use('/cart', cartRouter)
-app.use('/product', productRouter)
+app.use('/favorite', favoriteRouter)
+app.use('/car', carRouter)
 
 const init = async () => {
   try {
