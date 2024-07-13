@@ -13,6 +13,10 @@ const CarSchema = new Schema({
   price: {
     type: Number,
     required: true
+  },
+  isFavorite: {
+    type: Boolean,
+    required: false,
   }
 })
 

@@ -4,9 +4,9 @@ const Favorite = require('../models/favorite')
 
 router.get('/', async (req, res) => {
   const favorite = await Favorite
-  .find()
-  .populate('order')
-  
+    .find()
+    .populate('car')
+
   res.json(favorite)
 })
 
@@ -15,19 +15,24 @@ router.get('/:favoriteId', async (req, res) => {
   const favorite = await Favorite.find({
     _id: req.params.favoriteId
   })
-  .populate('order')
+    .populate('car')
   res.json(favorite)
 })
 
 router.post('/', async (req, res) => {
-  const favorite = new Favorite({
-    count: 1,
-    order: req.body.orderId
-  })
+  const candidate = await Favorite.findOne({ car: req.body.carId })
+  if (!candidate) {
+    const favorite = new Favorite({
+      count: 1,
+      car: req.body.carId
+    })
 
-  await favorite.save()
+    await favorite.save()
 
-  res.json({ message: 'Товар успешно добавлен в корзину' })
+    res.json({ message: 'Машина добавлена в избранное' })
+    return
+  }
+  res.json({ message: 'Машина уже в избранном' })
 })
 
 router.put('/:favoriteId', async (req, res) => {
@@ -43,8 +48,8 @@ router.put('/:favoriteId', async (req, res) => {
 })
 
 router.delete('/:favoriteId', async (req, res) => {
-  await Favorite.deleteOne({ _id: req.params.favoriteId })
-  res.json({ message: 'Товар успешно удален' })
+  await Favorite.deleteOne({ car: req.params.favoriteId })
+  res.json({ message: 'Машина успешно удалена с избранного' })
 })
 
 router.delete('/', async (req, res) => {
