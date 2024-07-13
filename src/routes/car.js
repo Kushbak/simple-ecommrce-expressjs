@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const router = Router()
 const Car = require('../models/car')
+const upload = require('../middleware/upload')
 
 router.get('/', async (req, res) => {
   const cars = await Car.find()
@@ -12,12 +13,16 @@ router.get('/:carId', async (req, res) => {
   res.json(car)
 })
 
-router.post('/', async (req, res) => {
+router.post('/', upload.single('img'), async (req, res) => {
   const newCar = new Car({
     name: req.body.name,
     img: req.body.img,
     price: req.body.price,
   })
+
+  if(req.file) {
+    newCar.img = req.file.path
+  }
 
   await newCar.save()
 
