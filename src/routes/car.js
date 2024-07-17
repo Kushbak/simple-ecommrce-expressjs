@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const router = Router()
 const Car = require('../models/car')
-const upload = require('../middleware/upload')
+// const upload = require('../middleware/upload')
 
 router.get('/', async (req, res) => {
   const cars = await Car.find()
@@ -13,17 +13,20 @@ router.get('/:carId', async (req, res) => {
   res.json(car)
 })
 
-router.post('/', upload.single('img'), async (req, res) => {
-  const newCar = new Car({
-    name: req.body.name,
-    img: req.body.img,
-    price: req.body.price,
+router.post(
+  '/',
+  // upload.single('img'), 
+  async (req, res) => {
+    const newCar = new Car({
+      name: req.body.name,
+      img: req.body.img,
+      price: req.body.price,
+    })
+
+    await newCar.save()
+
+    res.json({ message: 'Машина успешно создана', car: newCar })
   })
-
-  await newCar.save()
-
-  res.json({ message: 'Машина успешно создана', car: newCar })
-})
 
 router.delete('/:carId', async (req, res) => {
   await Car.findByIdAndDelete(req.params.carId)
