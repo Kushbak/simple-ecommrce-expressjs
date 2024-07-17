@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const router = Router()
 const Favorite = require('../models/favorite')
+const Car = require('../models/car')
 
 router.get('/', async (req, res) => {
   const favorite = await Favorite
@@ -19,20 +20,30 @@ router.get('/:favoriteId', async (req, res) => {
   res.json(favorite)
 })
 
+// todo add isFavorite for favoritted car
+
 router.post('/', async (req, res) => {
-  const candidate = await Favorite.findOne({ car: req.body.carId })
-  if (!candidate) {
-    const favorite = new Favorite({
-      count: 1,
-      car: req.body.carId
-    })
+  try {
+    const candidate = await Favorite.findOne({ car: req.body.carId })
+    const car = await Car.findById(req.body.carId)
+    if (!candidate) {
+      const favorite = new Favorite({
+        count: 1,
+        car: req.body.carId
+      })
 
-    await favorite.save()
+      await favorite.save()
+      car.isFavorite = true
+      await car.save()
 
-    res.json({ message: 'Машина добавлена в избранное' })
-    return
+      res.json({ message: 'Машина добавлена в избранное' })
+      return
+    }
+    res.json({ message: 'Машина уже в избранном' })
+  } catch (e) {
+    console.log(e)
+    res.json({ message: 'Ошибка сервера' })
   }
-  res.json({ message: 'Машина уже в избранном' })
 })
 
 router.put('/:favoriteId', async (req, res) => {
@@ -49,6 +60,9 @@ router.put('/:favoriteId', async (req, res) => {
 
 router.delete('/:favoriteId', async (req, res) => {
   await Favorite.deleteOne({ car: req.params.favoriteId })
+  const car = await Car.findById(req.params.favoriteId)
+  car.isFavorite = false
+  await car.save()
   res.json({ message: 'Машина успешно удалена с избранного' })
 })
 

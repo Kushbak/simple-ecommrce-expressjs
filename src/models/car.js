@@ -16,6 +16,7 @@ const CarSchema = new Schema({
   },
   isFavorite: {
     type: Boolean,
+    default: false,
     required: false,
   }
 })

@@ -1,30 +1,26 @@
 const path = require('path')
 const multer = require('multer')
+const { GridFsStorage } = require('multer-gridfs-storage')
+const crypto = require("crypto");
+const { URI } = require('../config')
 
-const storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function(req, file, cb) {
-    let ext = path.extname(file.originalname)
-    cb(null, Date.now() + ext)
-  }
-}) 
-
-const upload = multer({
-  storage,
-  fileFilter: function(req, file, cb) {
-    console.log(file)
-    if(file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg') {
-      cb(null, true)
-    } else {
-      cb(null, false)
-      console.log('only images supported')
-    }
-  },
-  limits: {
-    fileSize: 1024 * 1024 * 2
+const storage = new GridFsStorage({
+  url: URI,
+  file: (req, file) => {
+    return new Promise((resolve, reject) => {
+      crypto.randomBytes(16, (err, buf) => {
+        if (err) return reject(err)
+        const filename = buf.toString('hex') + path.extname(file.originalname)
+        const fileInfo = {
+          filename,
+          bucketName: 'uploads'
+        }
+        resolve(fileInfo)
+      })
+    })
   }
 })
+
+const upload = multer({ storage })
 
 module.exports = upload

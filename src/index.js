@@ -3,9 +3,8 @@ const express = require('express')
 const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const favoriteRouter = require('./routes/favorite')
-const carRouter = require('./routes/car')
-
-const URI = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.zo8jykc.mongodb.net/?retryWrites=true&w=majority&appName=${process.env.DB_CLUSTERNAME}`;
+const carRouter = require('./routes/car');
+const { URI } = require('./config');
 
 const app = express()
 
@@ -25,7 +24,12 @@ app.use('/car', carRouter)
 
 const init = async () => {
   try {
-    await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    const connect = await mongoose.connect(URI, { useNewUrlParser: true, useUnifiedTopology: true });
+    // connect.once('open', () => {
+    //   gfs = new mongoose.mongo.GridFSBucket(connect.db, {
+    //     bucketName: 'uploads'
+    //   })
+    // })
     app.listen(process.env.PORT || 5000, () => {
       console.log('listening ' + process.env.PORT)
     })

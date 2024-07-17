@@ -20,10 +20,6 @@ router.post('/', upload.single('img'), async (req, res) => {
     price: req.body.price,
   })
 
-  if(req.file) {
-    newCar.img = req.file.path
-  }
-
   await newCar.save()
 
   res.json({ message: 'Машина успешно создана', car: newCar })
