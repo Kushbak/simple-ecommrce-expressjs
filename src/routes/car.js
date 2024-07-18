@@ -4,16 +4,26 @@ const Car = require('../models/car')
 // const upload = require('../middleware/upload')
 
 router.get('/', async (req, res) => {
-  const { name } = req.query
+  const { name, minPrice, maxPrice } = req.query; 
 
-  let cars
+  let filter = {};
+
   if (name) {
-    cars = await Car.find({ name: new RegExp(name, 'i') })
-  } else {
-    cars = await Car.find()
+    filter.name = new RegExp(name, 'i'); // Case-insensitive search
   }
 
-  res.json(cars)
+  if (minPrice || maxPrice) {
+    filter.price = {};
+    if (minPrice) {
+      filter.price.$gte = Number(minPrice); // Greater than or equal to minPrice
+    }
+    if (maxPrice) {
+      filter.price.$lte = Number(maxPrice); // Less than or equal to maxPrice
+    }
+  }
+
+  const cars = await Car.find(filter);
+  res.json(cars);
 })
 
 router.get('/:carId', async (req, res) => {
