@@ -4,7 +4,15 @@ const Car = require('../models/car')
 // const upload = require('../middleware/upload')
 
 router.get('/', async (req, res) => {
-  const cars = await Car.find()
+  const { name } = req.query
+
+  let cars
+  if (name) {
+    cars = await Car.find({ name: new RegExp(name, 'i') })
+  } else {
+    cars = await Car.find()
+  }
+
   res.json(cars)
 })
 
