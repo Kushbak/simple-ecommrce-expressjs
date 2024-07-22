@@ -4,7 +4,7 @@ const Car = require('../models/car')
 // const upload = require('../middleware/upload')
 
 router.get('/', async (req, res) => {
-  const { name, minPrice, maxPrice } = req.query; 
+  const { name, minPrice, maxPrice, sort } = req.query; 
 
   let filter = {};
 
@@ -22,7 +22,14 @@ router.get('/', async (req, res) => {
     }
   }
 
-  const cars = await Car.find(filter);
+  let sortQuery = {};
+  if (sort) {
+    const sortField = sort.includes('name') ? 'name' : 'price'
+    const order = sort[0] === '-' ? -1 : 1
+    sortQuery[sortField] = order
+  }
+
+  const cars = await Car.find(filter).sort(sortQuery);
   res.json(cars);
 })
 
