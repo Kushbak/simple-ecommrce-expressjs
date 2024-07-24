@@ -94,13 +94,21 @@ router.delete('/:carId', async (req, res) => {
   }
 })
 
-router.get('/images/', async (req, res) => {
+router.put('/:carId', async (req, res) => {
   try {
-    gfsClient.gfs.find().toArray((err, files) => {
-      console.log({ files })
-    })
+    const candidate = await Car.findById(req.params.carId)
+    if (candidate) {
+      if (req.body.img) candidate.img = req.body.img
+      if (req.body.name) candidate.name = req.body.name
+      if (req.body.price) candidate.price = req.body.price
+
+      await candidate.save()
+      res.json({ message: 'Данные машины успешно изменены' })
+    } else {
+      res.status(404).json({ message: 'Машина с таким айди не найдена' })
+    }
   } catch (e) {
-    console.log('Server Error', e)
+    console.log('server error', e)
   }
 })
 
